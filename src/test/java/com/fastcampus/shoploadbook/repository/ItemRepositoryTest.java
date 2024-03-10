@@ -111,4 +111,18 @@ class ItemRepositoryTest {
         Assertions.assertFalse(itemList.isEmpty());
         Assertions.assertEquals(4, itemList.size());
     }
+
+    @Test
+    @DisplayName("가격 내림차순 조회 테스트")
+    void test() {
+        // given
+        createItemList();
+
+        // when
+        List<Item> itemList = itemRepository.findByPriceLessThanOrderByPriceDesc(10005);
+
+        // then
+        Assertions.assertFalse(itemList.isEmpty());
+        Assertions.assertEquals("테스트 상품3",itemList.get(1).getName());
+    }
 }
