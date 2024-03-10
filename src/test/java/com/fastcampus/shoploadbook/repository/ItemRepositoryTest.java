@@ -3,6 +3,7 @@ package com.fastcampus.shoploadbook.repository;
 import com.fastcampus.shoploadbook.constant.ItemSellStatus;
 import com.fastcampus.shoploadbook.entity.Item;
 import com.fastcampus.shoploadbook.entity.QItem;
+import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
@@ -13,7 +14,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.ActiveProfiles;
+import org.thymeleaf.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -177,5 +182,60 @@ class ItemRepositoryTest {
 
         // then
         Assertions.assertEquals(10, itemList.size());
+    }
+
+    @Test
+    @DisplayName("상품 Querydsl 조회 테스트 2")
+    void queryDslTest2() {
+        // given
+        createItemList2();
+
+        // when
+        BooleanBuilder booleanBuilder = new BooleanBuilder();
+        QItem item = QItem.item;
+        String detail = "테스트 상품 상세 설명";
+        int price = 10003;
+        String sellStat = "SELL";
+
+        booleanBuilder.and(item.detail.like("%"+detail+"%"));
+        booleanBuilder.and(item.price.gt(price));
+
+        if (StringUtils.equals(sellStat, ItemSellStatus.SELL)) {
+            booleanBuilder.and(item.sellStatus.eq(ItemSellStatus.SELL));
+        }
+
+        Pageable pageable = PageRequest.of(0, 5);
+        Page<Item> itemPagingResult = itemRepository.findAll(booleanBuilder, pageable);
+
+        // then
+        Assertions.assertEquals(2, itemPagingResult.getTotalElements());
+
+        List<Item> resultItemList = itemPagingResult.getContent();
+        Assertions.assertEquals("테스트 상품5", resultItemList.get(1).getName());
+    }
+
+    private void createItemList2() {
+        List<Item> itemList = new ArrayList<>();
+        for (int i = 1 ; i <= 5 ; i++) {
+            Item item = Item.builder()
+                    .name("테스트 상품"+i)
+                    .price(10000+i)
+                    .detail("테스트 상품 상세 설명"+i)
+                    .sellStatus(ItemSellStatus.SELL)
+                    .quantity(100)
+                    .build();
+            itemList.add(item);
+        }
+        for (int i = 6 ; i <= 10 ; i++) {
+            Item item = Item.builder()
+                    .name("테스트 상품"+i)
+                    .price(10000+i)
+                    .detail("테스트 상품 상세 설명"+i)
+                    .sellStatus(ItemSellStatus.SOLD_OUT)
+                    .quantity(100)
+                    .build();
+            itemList.add(item);
+        }
+        itemRepository.saveAll(itemList);
     }
 }
