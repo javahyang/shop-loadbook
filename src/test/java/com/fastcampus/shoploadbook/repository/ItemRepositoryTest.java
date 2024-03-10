@@ -2,6 +2,11 @@ package com.fastcampus.shoploadbook.repository;
 
 import com.fastcampus.shoploadbook.constant.ItemSellStatus;
 import com.fastcampus.shoploadbook.entity.Item;
+import com.fastcampus.shoploadbook.entity.QItem;
+import com.querydsl.jpa.impl.JPAQuery;
+import com.querydsl.jpa.impl.JPAQueryFactory;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -19,6 +24,9 @@ class ItemRepositoryTest {
 
     @Autowired
     ItemRepository itemRepository;
+
+    @PersistenceContext
+    EntityManager em;
 
     @BeforeEach
     void clean() {
@@ -114,7 +122,7 @@ class ItemRepositoryTest {
 
     @Test
     @DisplayName("가격 내림차순 조회 테스트")
-    void test() {
+    void findByPriceLessThanOrderByPriceDescTest() {
         // given
         createItemList();
 
@@ -147,6 +155,25 @@ class ItemRepositoryTest {
 
         // when
         List<Item> itemList = itemRepository.findByDetailByNative("테스트 상품 상세 설명");
+
+        // then
+        Assertions.assertEquals(10, itemList.size());
+    }
+
+    @Test
+    @DisplayName("Querydsl 조회 테스트1")
+    void queryDslTest() {
+        // given
+        createItemList();
+
+        // when
+        JPAQueryFactory queryFactory = new JPAQueryFactory(em);
+        QItem qItem = QItem.item;
+        JPAQuery<Item> query = queryFactory.selectFrom(qItem)
+                .where(qItem.sellStatus.eq(ItemSellStatus.SELL))
+                .where(qItem.detail.like("%"+"테스트 상품 상세 설명"+"%"))
+                .orderBy(qItem.price.desc());
+        List<Item> itemList = query.fetch();
 
         // then
         Assertions.assertEquals(10, itemList.size());
