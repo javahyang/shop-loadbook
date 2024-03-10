@@ -125,4 +125,17 @@ class ItemRepositoryTest {
         Assertions.assertFalse(itemList.isEmpty());
         Assertions.assertEquals("테스트 상품3",itemList.get(1).getName());
     }
+
+    @Test
+    @DisplayName("@Query 이용한 상품 조회 리스트")
+    void findByDetailTest() {
+        // given
+        createItemList();
+
+        // when
+        List<Item> itemList = itemRepository.findByDetail("테스트 상품 상세 설명");
+
+        // then
+        Assertions.assertEquals(10, itemList.size());
+    }
 }
