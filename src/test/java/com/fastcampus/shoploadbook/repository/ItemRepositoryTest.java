@@ -81,4 +81,20 @@ class ItemRepositoryTest {
         }
         itemRepository.saveAll(itemList);
     }
+
+    @Test
+    @DisplayName("상품명 or 상품상세설명 테스트")
+    void test() {
+        // given
+        createItemList();
+
+        // when
+        String name = "테스트 상품1";
+        String detail = "테스트 상품 상세 설명5";
+        List<Item> itemList = itemRepository.findByNameOrDetail(name, detail);
+
+        // then
+        Assertions.assertFalse(itemList.isEmpty());
+        Assertions.assertEquals(2, itemList.size());
+    }
 }
