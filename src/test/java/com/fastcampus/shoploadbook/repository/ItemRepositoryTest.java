@@ -84,7 +84,7 @@ class ItemRepositoryTest {
 
     @Test
     @DisplayName("상품명 or 상품상세설명 테스트")
-    void test() {
+    void findByNameOrDetailTest() {
         // given
         createItemList();
 
@@ -96,5 +96,19 @@ class ItemRepositoryTest {
         // then
         Assertions.assertFalse(itemList.isEmpty());
         Assertions.assertEquals(2, itemList.size());
+    }
+
+    @Test
+    @DisplayName("가격 LessThen 테스트")
+    void findByPriceLessThenTest() {
+        // given
+        createItemList();
+
+        // when
+        List<Item> itemList = itemRepository.findByPriceLessThan(10005);
+
+        // then
+        Assertions.assertFalse(itemList.isEmpty());
+        Assertions.assertEquals(4, itemList.size());
     }
 }
