@@ -138,4 +138,17 @@ class ItemRepositoryTest {
         // then
         Assertions.assertEquals(10, itemList.size());
     }
+
+    @Test
+    @DisplayName("nativeQuery 속성을 이용한 상품 조회 테스트")
+    void findByDetailByNative() {
+        // given
+        createItemList();
+
+        // when
+        List<Item> itemList = itemRepository.findByDetailByNative("테스트 상품 상세 설명");
+
+        // then
+        Assertions.assertEquals(10, itemList.size());
+    }
 }
