@@ -10,6 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @ActiveProfiles("test")
 @SpringBootTest
 class ItemRepositoryTest {
@@ -40,5 +43,42 @@ class ItemRepositoryTest {
         // then
         Assertions.assertEquals(10000, savedItem.getPrice());
         Assertions.assertEquals(ItemSellStatus.SELL, savedItem.getSellStatus());
+    }
+
+    @Test
+    @DisplayName("상품명 조회 테스트")
+    void findByNameTest() {
+        // given
+        createItemList();
+
+        // when
+        List<Item> itemList = itemRepository.findByName("테스트 상품1");
+        Item firstItem = itemList.stream().findFirst().orElse(
+                Item.builder()
+                    .name("임시상품")
+                    .price(10000)
+                    .detail("임시상품 상세 설명")
+                    .sellStatus(ItemSellStatus.SELL)
+                    .quantity(100)
+                    .build()
+        );
+
+        // then
+        Assertions.assertEquals("테스트 상품1", firstItem.getName());
+    }
+
+    private void createItemList() {
+        List<Item> itemList = new ArrayList<>();
+        for (int i = 1 ; i <= 10 ; i++) {
+            Item item = Item.builder()
+                    .name("테스트 상품"+i)
+                    .price(10000+i)
+                    .detail("테스트 상품 상세 설명"+i)
+                    .sellStatus(ItemSellStatus.SELL)
+                    .quantity(100)
+                    .build();
+            itemList.add(item);
+        }
+        itemRepository.saveAll(itemList);
     }
 }
