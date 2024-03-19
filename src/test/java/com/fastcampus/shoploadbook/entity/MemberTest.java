@@ -1,6 +1,7 @@
 package com.fastcampus.shoploadbook.entity;
 
 import com.fastcampus.shoploadbook.constant.Role;
+import com.fastcampus.shoploadbook.controller.dto.MemberFormRequestDto;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -28,5 +29,22 @@ class MemberTest {
         // then
         System.out.println(member.getPassword());
         Assertions.assertEquals(Role.USER, member.getRole());
+    }
+
+    @Test
+    @DisplayName("of 테스트")
+    void memberOf() {
+        // given
+        MemberFormRequestDto dto = new MemberFormRequestDto(
+                "김나라",
+                "nara@abc.com",
+                "abc1234!",
+                "버지니아주 제주시"
+        );
+
+        Member member = Member.of(dto, passwordEncoder);
+
+        // then
+        Assertions.assertEquals(member.getAddress(), dto.address());
     }
 }

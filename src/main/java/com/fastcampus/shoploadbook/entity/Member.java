@@ -1,11 +1,10 @@
 package com.fastcampus.shoploadbook.entity;
 
 import com.fastcampus.shoploadbook.constant.Role;
+import com.fastcampus.shoploadbook.controller.dto.MemberFormRequestDto;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Builder
 @NoArgsConstructor
@@ -34,4 +33,17 @@ public class Member extends BaseTimeEntity {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    public static Member of(
+        MemberFormRequestDto dto,
+        PasswordEncoder passwordEncoder
+    ) {
+        return Member.builder()
+                .name(dto.name())
+                .email(dto.email())
+                .password(passwordEncoder.encode(dto.password()))
+                .address(dto.address())
+                .role(Role.USER)
+                .build();
+    }
 }
