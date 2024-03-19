@@ -50,4 +50,19 @@ class MemberServiceTest {
         assertEquals(member.getPassword(), savedMember.getPassword());
         assertEquals(member.getRole(), savedMember.getRole());
     }
+
+    @Test
+    @DisplayName("중복 회원가입하는 경우 예외 반환")
+    void test() {
+        // given
+        Member member1 = createMember();
+        Member member2 = createMember();
+
+        // when & then
+        memberService.saveMember(member1);
+        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> {
+            memberService.saveMember(member2);
+        });
+        assertEquals("이미 가입된 회원입니다.", exception.getMessage());
+    }
 }
