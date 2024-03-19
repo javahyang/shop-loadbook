@@ -1,6 +1,6 @@
 package com.fastcampus.shoploadbook;
 
-import com.fastcampus.shoploadbook.controller.dto.MemberFormRequestDto;
+import com.fastcampus.shoploadbook.controller.dto.MemberFormDto;
 import com.fastcampus.shoploadbook.entity.Member;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -26,12 +26,11 @@ class MemberServiceTest {
     PasswordEncoder passwordEncoder;
 
     private Member createMember() {
-        MemberFormRequestDto dto = new MemberFormRequestDto(
-                "김나라",
-                "nara@abc.com",
-                "abc1234!",
-                "버지니아주 제주시"
-        );
+        MemberFormDto dto = new MemberFormDto();
+        dto.setName("김나라");
+        dto.setEmail("nara@abc.com");
+        dto.setPassword("abc1234!");
+        dto.setAddress("버지니아주 제주시");
 
         return Member.of(dto, passwordEncoder);
     }
