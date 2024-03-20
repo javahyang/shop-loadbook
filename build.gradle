@@ -68,6 +68,10 @@ jacoco {
 }
 
 jacocoTestCoverageVerification {
+    def Qdomains = []
+    for (qPattern in '*.QA'..'*.QZ') {
+        Qdomains.add(qPattern + '*')
+    }
 //    dependsOn jacocoTestReport
 
     violationRules {
@@ -111,9 +115,10 @@ jacocoTestCoverageVerification {
 
             // 커버리지 체크를 제외할 클래스들
             excludes = [
-//                    '*.test.*',
-//                    '*.Kotlin*'
-            ]
+                    '**.*Application*',
+                    '**.*Config*',
+                    '**.*Dto*'
+            ] + Qdomains
         }
     }
 }
