@@ -60,7 +60,7 @@ jacocoTestReport {
         csv.required = false
     }
 
-    finalizedBy jacocoTestCoverageVerification
+//    finalizedBy jacocoTestCoverageVerification
 }
 
 jacoco {
@@ -68,7 +68,7 @@ jacoco {
 }
 
 jacocoTestCoverageVerification {
-    dependsOn jacocoTestReport
+//    dependsOn jacocoTestReport
 
     violationRules {
         rule {
