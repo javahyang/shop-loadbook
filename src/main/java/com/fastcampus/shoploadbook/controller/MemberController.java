@@ -1,6 +1,6 @@
 package com.fastcampus.shoploadbook.controller;
 
-import com.fastcampus.shoploadbook.MemberService;
+import com.fastcampus.shoploadbook.service.MemberService;
 import com.fastcampus.shoploadbook.controller.dto.MemberFormDto;
 import com.fastcampus.shoploadbook.entity.Member;
 import jakarta.validation.Valid;

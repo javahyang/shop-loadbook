@@ -1,7 +1,8 @@
-package com.fastcampus.shoploadbook;
+package com.fastcampus.shoploadbook.service;
 
 import com.fastcampus.shoploadbook.controller.dto.MemberFormDto;
 import com.fastcampus.shoploadbook.entity.Member;
+import com.fastcampus.shoploadbook.service.MemberService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,4 +1,4 @@
-package com.fastcampus.shoploadbook;
+package com.fastcampus.shoploadbook.service;
 
 import com.fastcampus.shoploadbook.entity.Member;
 import com.fastcampus.shoploadbook.repository.MemberRepository;
