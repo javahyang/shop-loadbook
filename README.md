@@ -10,3 +10,15 @@
 * Jacoco 활용으로 테스트 커버리지 확인
 * builder 패턴 사용
 * application.yml 사용
+
+---
+
+- git push 할 때 자동으로 테스트 커버리지 확인하도록 설정
+  - `.git/hooks` 하위에 `pre-push` 파일 생성
+  - ```
+    #!/bin/bash
+    
+    ./gradlew test jacocoTestReport jacocoTestCoverageVerification
+    ```
+  - 파일 권한 변경 : `chmod +x .git/hooks/pre-push`
+  
