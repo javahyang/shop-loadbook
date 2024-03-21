@@ -7,6 +7,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -73,5 +74,57 @@ class MemberControllerTest {
                 .andExpect(redirectedUrl("/"));
 
         verify(memberService, times(1)).saveMember(any(Member.class));
+    }
+
+    @Test
+    @DisplayName("회원가입시 유효성 검사에 실패한 케이스")
+    void memberNew2() throws Exception {
+        // given
+        MemberFormDto dto = new MemberFormDto();
+        dto.setName("김나라");
+        dto.setEmail("nara@abc.com");
+        dto.setPassword("abc1234!");
+        dto.setAddress("");
+
+        // then
+        mockMvc.perform(post(BASE_URL + "/new")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("name", dto.getName())
+                        .param("email", dto.getEmail())
+                        .param("password", dto.getPassword())
+                        .param("address", dto.getAddress())
+                        .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("dto")) // @ModelAttribute("dto") 설정과 같은 값
+                .andExpect(view().name("member/memberForm"));
+    }
+
+    @Test
+    @DisplayName("중복 회원가입으로 예외 반환하는 케이스")
+    void memberNew3() throws Exception {
+        // given
+        MemberFormDto dto = new MemberFormDto();
+        dto.setName("김나라");
+        dto.setEmail("nara@abc.com");
+        dto.setPassword("abc1234!");
+        dto.setAddress("버지니아주 제주시");
+        String errorMessage = "이미 가입된 회원입니다.";
+
+        // when
+        Mockito.doThrow(new IllegalStateException(errorMessage))
+                .when(memberService)
+                .saveMember(Mockito.any(Member.class));
+
+        // then
+        mockMvc.perform(post(BASE_URL + "/new")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("name", dto.getName())
+                        .param("email", dto.getEmail())
+                        .param("password", dto.getPassword())
+                        .param("address", dto.getAddress())
+                        .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(view().name("member/memberForm"))
+                .andExpect(model().attribute("errorMessage", errorMessage));
     }
 }
